@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="mr" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>सापशिडी</title>
+  <!-- Google Fonts: IBM Plex Sans & IBM Plex Sans Devanagari -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Devanagari:wght@300;400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"IBM Plex Sans Devanagari"', '"IBM Plex Sans"', 'sans-serif'],
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    :root {
+      --bg-primary: #f8fafc;
+      --card-bg: #ffffff;
+      --card-border: #e2e8f0;
+      --text-main: #1e293b;
+      --text-muted: #475569;
+      --quote-bg: #fffbeb;
+      --quote-border: #f59e0b;
+      --quote-text: #92400e;
+    }
+
+    .dark {
+      --bg-primary: #090d16;
+      --card-bg: #111827;
+      --card-border: #1f293d;
+      --text-main: #f1f5f9;
+      --text-muted: #cbd5e1;
+      --quote-bg: #1e1b12;
+      --quote-border: #d97706;
+      --quote-text: #fef3c7;
+    }
+
+    body {
+      font-family: 'IBM Plex Sans Devanagari', 'IBM Plex Sans', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-main);
+      transition: background-color 0.35s ease, color 0.35s ease;
+      word-break: normal;
+      overflow-wrap: break-word;
+      hyphens: none;
+      -webkit-hyphens: none;
+    }
+
+    /* Justified content with strict word integrity */
+    .content-justified {
+      text-align: justify;
+      text-justify: inter-word;
+      hyphens: none;
+      -webkit-hyphens: none;
+      word-break: normal;
+      overflow-wrap: break-word;
+    }
+
+    /* SVG Keyframe Animations */
+    @keyframes floatDice {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(8deg); }
+    }
+
+    @keyframes ladderGlow {
+      0%, 100% { opacity: 0.65; stroke: #38bdf8; }
+      50% { opacity: 1; stroke: #fcd34d; }
+    }
+
+    @keyframes snakeWave {
+      0%, 100% { stroke-dashoffset: 0; }
+      50% { stroke-dashoffset: 16; }
+    }
+
+    @keyframes pulseTarget {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 0 4px rgba(245, 158, 11, 0.4)); }
+      50% { transform: scale(1.08); filter: drop-shadow(0 0 16px rgba(245, 158, 11, 0.9)); }
+    }
+
+    @keyframes starTwinkle {
+      0%, 100% { opacity: 0.25; transform: scale(0.85); }
+      50% { opacity: 1; transform: scale(1.25); }
+    }
+
+    .animated-dice {
+      animation: floatDice 5s ease-in-out infinite;
+      transform-origin: center;
+    }
+
+    .ladder-rung {
+      animation: ladderGlow 3s ease-in-out infinite;
+    }
+
+    .snake-body-pulse {
+      stroke-dasharray: 8, 4;
+      animation: snakeWave 4s linear infinite;
+    }
+
+    .goal-badge {
+      animation: pulseTarget 3.2s ease-in-out infinite;
+      transform-origin: 395px 65px;
+    }
+
+    .twinkle-star-1 {
+      animation: starTwinkle 2.4s ease-in-out infinite;
+      transform-origin: 80px 70px;
+    }
+
+    .twinkle-star-2 {
+      animation: starTwinkle 3.2s ease-in-out infinite 0.7s;
+      transform-origin: 430px 140px;
+    }
+
+    .twinkle-star-3 {
+      animation: starTwinkle 2.8s ease-in-out infinite 1.4s;
+      transform-origin: 190px 40px;
+    }
+  </style>
+</head>
+
+<body class="min-h-screen flex flex-col items-center px-3 sm:px-6 py-6 md:py-10">
+
+  <!-- Floating Sticky Action Bar: Theme Toggle & Share Button -->
+  <aside aria-label="Controls" class="sticky top-4 z-50 flex items-center justify-end w-full max-w-3xl mb-4 pointer-events-none">
+    <div class="pointer-events-auto flex items-center gap-2.5 bg-white/85 dark:bg-slate-900/85 backdrop-blur-md p-1.5 rounded-full border border-slate-200 dark:border-slate-800 shadow-md transition-all duration-300">
+      
+      <!-- Theme Toggle Button -->
+      <button id="themeToggleBtn" type="button" aria-label="Toggle Theme" class="p-2.5 rounded-full text-slate-700 dark:text-amber-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500">
+        <!-- Sun Icon (for dark mode) -->
+        <svg id="sunIcon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="4"></circle>
+          <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>
+        </svg>
+        <!-- Moon Icon (for light mode) -->
+        <svg id="moonIcon" class="w-5 h-5 block" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+        </svg>
+      </button>
+
+      <!-- Share Button -->
+      <button id="shareBtn" type="button" aria-label="Share page" class="p-2.5 rounded-full text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500 flex items-center justify-center">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+          <circle cx="18" cy="5" r="3"></circle>
+          <circle cx="6" cy="12" r="3"></circle>
+          <circle cx="18" cy="19" r="3"></circle>
+          <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+          <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+        </svg>
+      </button>
+
+    </div>
+  </aside>
+
+  <main class="w-full max-w-3xl bg-[var(--card-bg)] border border-[var(--card-border)] rounded-2xl md:rounded-3xl shadow-xl p-6 sm:p-10 md:p-12 transition-colors duration-300">
+    
+    <!-- Title -->
+    <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold text-center tracking-tight text-slate-900 dark:text-white mb-6">
+      सापशिडी
+    </h1>
+
+    <div class="w-full my-6 rounded-2xl overflow-hidden bg-gradient-to-b from-indigo-50/70 via-sky-50/50 to-amber-50/50 dark:from-slate-900 dark:via-indigo-950/40 dark:to-slate-900/80 border border-slate-200/80 dark:border-slate-800 shadow-inner flex items-center justify-center p-2 sm:p-4">
+      <svg class="w-full max-w-lg h-auto drop-shadow-sm select-none" viewBox="0 0 500 320" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="सापशिडी खेळ आणि जीवनाचे रूपक: शिडी, साप, फासा आणि शंभरावे घर">
+        <defs>
+          <!-- Gradients -->
+          <linearGradient id="boardGrad" x1="20" y1="20" x2="480" y2="300" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#4338ca" stop-opacity="0.12"/>
+            <stop offset="100%" stop-color="#06b6d4" stop-opacity="0.08"/>
+          </linearGradient>
+
+          <linearGradient id="snakeGrad" x1="370" y1="110" x2="160" y2="280" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ef4444"/>
+            <stop offset="50%" stop-color="#f97316"/>
+            <stop offset="100%" stop-color="#84cc16"/>
+          </linearGradient>
+
+          <linearGradient id="ladderGrad" x1="120" y1="280" x2="350" y2="90" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#0284c7"/>
+            <stop offset="50%" stop-color="#06b6d4"/>
+            <stop offset="100%" stop-color="#38bdf8"/>
+          </linearGradient>
+
+          <linearGradient id="diceGrad" x1="50" y1="130" x2="110" y2="190" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#ffffff"/>
+            <stop offset="100%" stop-color="#f1f5f9"/>
+          </linearGradient>
+
+          <linearGradient id="goldGrad" x1="360" y1="35" x2="430" y2="95" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#f59e0b"/>
+            <stop offset="100%" stop-color="#fbbf24"/>
+          </linearGradient>
+
+          <filter id="softGlow" x="-20%" y="-20%" width="140%" height="140%">
+            <feGaussianBlur stdDeviation="3" result="blur"/>
+            <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+          </filter>
+        </defs>
+
+        <!-- Decorative background board pattern -->
+        <rect x="25" y="25" width="450" height="270" rx="16" fill="url(#boardGrad)" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 4" class="dark:stroke-slate-700"/>
+
+        <!-- Ambient subtle grid tiles representing the 100 squares -->
+        <g opacity="0.35" class="dark:opacity-20" stroke="#94a3b8" stroke-width="0.8">
+          <line x1="25" y1="79" x2="475" y2="79" />
+          <line x1="25" y1="133" x2="475" y2="133" />
+          <line x1="25" y1="187" x2="475" y2="187" />
+          <line x1="25" y1="241" x2="475" y2="241" />
+          <line x1="115" y1="25" x2="115" y2="295" />
+          <line x1="205" y1="25" x2="205" y2="295" />
+          <line x1="295" y1="25" x2="295" y2="295" />
+          <line x1="385" y1="25" x2="385" y2="295" />
+        </g>
+
+        <!-- Shimmering Twinkling Stars -->
+        <g fill="#f59e0b" opacity="0.8">
+          <path class="twinkle-star-1" d="M80,62 L83,68 L89,70 L83,72 L80,78 L77,72 L71,70 L77,68 Z"/>
+          <path class="twinkle-star-2" d="M430,132 L432,137 L438,139 L432,141 L430,146 L428,141 L422,139 L428,137 Z"/>
+          <path class="twinkle-star-3" d="M190,32 L192,38 L198,40 L192,42 L190,48 L188,42 L182,40 L188,38 Z"/>
+        </g>
+
+        <!-- Ascending Ladder -->
+        <g stroke="url(#ladderGrad)" stroke-linecap="round">
+          <!-- Main rails -->
+          <line x1="170" y1="270" x2="330" y2="75" stroke-width="7" opacity="0.9" />
+          <line x1="195" y1="280" x2="355" y2="85" stroke-width="7" opacity="0.9" />
+
+          <!-- Ladder rungs -->
+          <line class="ladder-rung" x1="175" y1="245" x2="200" y2="255" stroke-width="4.5" />
+          <line class="ladder-rung" x1="195" y1="220" x2="220" y2="230" stroke-width="4.5" />
+          <line class="ladder-rung" x1="215" y1="195" x2="240" y2="205" stroke-width="4.5" />
+          <line class="ladder-rung" x1="235" y1="170" x2="260" y2="180" stroke-width="4.5" />
+          <line class="ladder-rung" x1="255" y1="145" x2="280" y2="155" stroke-width="4.5" />
+          <line class="ladder-rung" x1="275" y1="120" x2="300" y2="130" stroke-width="4.5" />
+          <line class="ladder-rung" x1="295" y1="95"  x2="320" y2="105" stroke-width="4.5" />
+        </g>
+
+        <!-- Sleek Serpentine Curve (Snake) -->
+        <g>
+          <!-- Snake Body Shadow -->
+          <path d="M375,100 C435,140 375,200 300,195 C220,190 220,270 140,265" fill="none" stroke="#000000" stroke-width="12" stroke-linecap="round" opacity="0.1" transform="translate(4, 5)"/>
+          
+          <!-- Snake Body Primary Path -->
+          <path d="M375,100 C435,140 375,200 300,195 C220,190 220,270 140,265" fill="none" stroke="url(#snakeGrad)" stroke-width="11" stroke-linecap="round"/>
+          
+          <!-- Animated Pattern on Snake's body -->
+          <path class="snake-body-pulse" d="M375,100 C435,140 375,200 300,195 C220,190 220,270 140,265" fill="none" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity="0.75"/>
+
+          <!-- Snake Head -->
+          <circle cx="375" cy="100" r="13" fill="#ef4444" />
+          <circle cx="371" cy="95" r="2.5" fill="#ffffff" />
+          <circle cx="370" cy="95" r="1.3" fill="#1e293b" />
+          <!-- Forked Tongue -->
+          <path d="M386,101 L396,101 L401,97 M396,101 L401,105" fill="none" stroke="#dc2626" stroke-width="1.8" stroke-linecap="round"/>
+        </g>
+
+        <!-- 100th Goal Square Badge -->
+        <g class="goal-badge" filter="url(#softGlow)">
+          <circle cx="395" cy="65" r="27" fill="url(#goldGrad)" stroke="#ffffff" stroke-width="2.5"/>
+          <text x="395" y="72" font-family="'IBM Plex Sans', sans-serif" font-size="20" font-weight="700" fill="#78350f" text-anchor="middle">100</text>
+        </g>
+
+        <!-- Animated Floating 3D Dice -->
+        <g class="animated-dice">
+          <!-- Dice Drop Shadow -->
+          <rect x="73" y="153" width="62" height="62" rx="14" fill="#000000" opacity="0.15" transform="rotate(-10 104 184) translate(6, 6)"/>
+          
+          <!-- Main Dice Body -->
+          <rect x="73" y="153" width="62" height="62" rx="14" fill="url(#diceGrad)" stroke="#cbd5e1" stroke-width="2.5" transform="rotate(-10 104 184)"/>
+          
+          <!-- Dice Pips / Dots representing positive non-zero throw (6 Dots) -->
+          <g transform="rotate(-10 104 184)" fill="#dc2626">
+            <circle cx="88" cy="168" r="4.2"/>
+            <circle cx="88" cy="184" r="4.2"/>
+            <circle cx="88" cy="200" r="4.2"/>
+            <circle cx="120" cy="168" r="4.2"/>
+            <circle cx="120" cy="184" r="4.2"/>
+            <circle cx="120" cy="200" r="4.2"/>
+          </g>
+        </g>
+
+        <!-- Second Smaller Supportive Dice in motion -->
+        <g transform="translate(38, 20) scale(0.68) rotate(18 170 210)">
+          <rect x="150" y="195" width="46" height="46" rx="10" fill="#f8fafc" stroke="#94a3b8" stroke-width="2"/>
+          <circle cx="163" cy="208" r="3.2" fill="#0284c7"/>
+          <circle cx="173" cy="218" r="3.2" fill="#0284c7"/>
+          <circle cx="183" cy="228" r="3.2" fill="#0284c7"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Core Philosophical Quote / Subtitle -->
+    <div class="my-6 p-4 sm:p-5 rounded-xl bg-[var(--quote-bg)] border-l-4 border-[var(--quote-border)] shadow-sm transition-colors duration-300">
+      <p class="text-base sm:text-lg md:text-xl font-medium text-[var(--quote-text)] leading-relaxed content-justified">
+        कारण फाश्यावर शून्य कधीच नसते, खेळातल्या आणि नाशिबाच्या; दोन्ही!
+      </p>
+    </div>
+
+    <!-- Body Paragraphs (Exact text strictly preserved without alteration) -->
+    <div class="space-y-5 text-slate-800 dark:text-slate-200 text-base sm:text-lg leading-relaxed sm:leading-loose">
+      
+      <p class="content-justified">
+        सापशिडी म्हणले की आपल्या डोळ्यासमोर येतो शंभर रंगीबेरंगी चौकोन असलेला एक पट, त्यावर छापलेली साप आणि शिड्यांची चित्रे, सोंगट्या आणि फासा. हा बैठा खेळ खेळलेला नाही असा लहान थोर मनुष्य जगात नसेल. आपल्या सर्वांना हा खेळ ठाऊक असला तरी निबंधाच्या उत्तरार्धात केलेल्या भाष्यासाठी संदर्भ म्हणून त्याचे थोडे औपचारिक वर्णन करणे भाग आहे.
+      </p>
+
+      <p class="content-justified">
+        शंभर घरांच्या या पटावर काही चौकोनांना जोडणारा साप आणि काहीना जोडणारी शिडी काढलेली असते. ही चित्रे यादृच्छिक म्हणजे रॅन्डमली काढलेली असतात. म्हणजे अमुक एका क्रमांकाच्या घरापासून साप आणि तमुक दोन क्रमांकांमधे शिडी असे काहीही ठरलेले नाही.
+      </p>
+
+      <p class="content-justified">
+        पहिल्या घरात सोंगटी ठेवून दानासाठी फासा टाकून खेळ सुरू होतो. जितके दान पडेल तितके घर सोंगटी पुढे जाते. ज्या घरात सोंगटी येते तिथे शिडी असेल तर त्या शिडीवरून तिच्या टोकाच्या घरापर्यंत पुढे चाल मिळते आणि तिथे सापाचे मुख असेल तर त्या सापाची शेपूट जिथवर काढली आहे तिथपर्यंत सोंगटी सापाने गिळल्यामुळे मागे येते अशी कल्पना.
+      </p>
+
+      <p class="content-justified">
+        फासा टाकून दाने मिळवत, शिडी मिळाली तर वर आणि सापाने गिळले तर मागे येत पण दान पडेल तसे पुढे जात राहायचे आणि असे करता करता ज्याची सोंगटी प्रथम शंभराव्या घरात पोहोचेल तो जिंकला, इतका साधा सरळ खेळ. एकमेकांना खाली खेचणे, कुरघोडी करणे असले काहीही नाही. फासा टाकल्यावर काय दान मिळेल त्यावर सोंगटीची चाल. सगळा नाशिबाचा खेळ.
+      </p>
+
+      <p class="content-justified">
+        आपल्या प्रत्येकाचे आयुष्य म्हणजे देखील जणू एक सापशिडीचा पटच असतो. शंभरावे घर म्हणजे ज्याची त्याची लक्ष्ये किंवा ध्येये. ती मिळवण्यासाठी केली जाणारी कार्ये, अर्थात नित्य आणि कौटुंबिक गरजा पूर्ण करण्यासाठी अर्थार्जन करणे व इतर म्हणजे जणू फासे टाकत राहणे. रोजच्या आयुष्यात होणारे चढउतार म्हणजे पडणारे दान आणि उत्पन्नात, मिळकतीत, सुखदुःखात, तब्येतीत आणि इतर गोष्टींत होणारे प्रासंगिक बदल म्हणजे अडचणींचे साप आणि प्रगतीच्या शिड्यांच्या पटावर खाली-वर करत का असेना पण काळाच्या ओघात पुढे होत राहणारी वाटचाल.
+      </p>
+
+      <p class="content-justified">
+        ध्येयांवर लक्ष केंद्रित करून प्रामाणिक कार्याचे फासे टाकत राहणे आणि मिळालेल्या दानाचा सुदुपयोग करत पुढे जात राहणे हे आपल्या हातात असते. नशीब नामक फासा प्रत्येक फेकीत किती दान देईल ते कोणालाच सांगता येत नाही हे जरी खरे असले तरी निकोप सवयी अंगी मुरलेल्या असतील तर त्यातून तयार होणारी ऊर्जा आयुष्याच्या वाटचालीत प्रसंगी माघार घेऊन शक्यतो वाटेतली धोकेरूपी सर्प-मुखे टाळण्याच्या क्लुप्त्या शिकवते आणि अडीअडचणीच्या एखाद्या कमनशिबी सापाने डंख मारलाच तर त्याच्याशी दोन हात करण्याची शक्ती देते. प्रगतीच्या संधी-शिड्या झडप मारून पकडायला, त्यावरून विद्युतवेगाने वर जायला हीच ऊर्जा जेट इंजिनाचे काम करते हे सांगणे न लगे!
+      </p>
+
+      <p class="content-justified">
+        नियमित साधना आणि मनाचिये ठायी असलेला कृतज्ञतेचा भाव हातून असे काही फासे टाकवतो की पडणारे दान शक्यतो सत्पात्रीच मिळावे. आणि हो, प्रगतीचा वेग जरी कमी-जास्त होत राहिला तरी ध्येयाकडे वाटचाल चालूच राहते कारण फाश्यावर शून्य कधीच नसते, खेळातल्या आणि नाशिबाच्या; दोन्ही! कार्याचा फासा टाकला की काहीतरी दान मिळतेच मिळते!
+      </p>
+
+      <!-- Signature & Concluding Reflections (Verbatim) -->
+      <div class="pt-6 sm:pt-8 text-right space-y-1">
+        <p class="font-semibold text-slate-800 dark:text-slate-200 text-lg">
+          अनुभूती येते..
+        </p>
+        <p class="text-sm font-medium text-slate-500 dark:text-slate-400 tracking-wider">
+          ~२०२५०७२८
+        </p>
+      </div>
+
+    </div>
+
+  </main>
+
+  <div id="toast" class="fixed bottom-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 bg-slate-900 text-white dark:bg-white dark:text-slate-900 text-sm font-medium px-5 py-3 rounded-full shadow-2xl flex items-center gap-2 pointer-events-none">
+    <svg class="w-4 h-4 text-emerald-400 dark:text-emerald-600" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+    </svg>
+    <span id="toastMsg">लिंक कॉपी झाली!</span>
+  </div>
+
+  <script>
+    (function () {
+      // Elements
+      const htmlEl = document.documentElement;
+      const themeToggleBtn = document.getElementById('themeToggleBtn');
+      const sunIcon = document.getElementById('sunIcon');
+      const moonIcon = document.getElementById('moonIcon');
+      const shareBtn = document.getElementById('shareBtn');
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      let toastTimeout = null;
+
+      // Toast notification helper (no alerts used)
+      function showToast(message) {
+        if (!toast || !toastMsg) return;
+        toastMsg.textContent = message;
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('translate-y-0', 'opacity-100');
+          toast.classList.add('translate-y-24', 'opacity-0');
+        }, 2800);
+      }
+
+      // Theme toggle initialization
+      function applyTheme(isDark) {
+        if (isDark) {
+          htmlEl.classList.add('dark');
+          sunIcon.classList.remove('hidden');
+          moonIcon.classList.add('hidden');
+          try { localStorage.setItem('theme', 'dark'); } catch (e) {}
+        } else {
+          htmlEl.classList.remove('dark');
+          sunIcon.classList.add('hidden');
+          moonIcon.classList.remove('hidden');
+          try { localStorage.setItem('theme', 'light'); } catch (e) {}
+        }
+      }
+
+      // Detect stored or system preferred theme
+      let storedTheme = null;
+      try { storedTheme = localStorage.getItem('theme'); } catch (e) {}
+      const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      applyTheme(storedTheme ? storedTheme === 'dark' : prefersDark);
+
+      // Theme toggle click handler
+      themeToggleBtn.addEventListener('click', () => {
+        const isCurrentDark = htmlEl.classList.contains('dark');
+        applyTheme(!isCurrentDark);
+      });
+
+      // Share handler using Web Share API with safe fallback
+      shareBtn.addEventListener('click', async () => {
+        const shareData = {
+          title: 'सापशिडी',
+          text: 'सापशिडी - कारण फाश्यावर शून्य कधीच नसते, खेळातल्या आणि नाशिबाच्या; दोन्ही!',
+          url: window.location.href
+        };
+
+        if (navigator.share) {
+          try {
+            await navigator.share(shareData);
+          } catch (err) {
+            // User cancelled share or failed; if AbortError ignore, else fallback
+            if (err.name !== 'AbortError') {
+              fallbackCopy();
+            }
+          }
+        } else {
+          fallbackCopy();
+        }
+      });
+
+      // Clipboard copy fallback
+      function fallbackCopy() {
+        const urlToCopy = window.location.href;
+        const tempInput = document.createElement('input');
+        tempInput.setAttribute('value', urlToCopy);
+        document.body.appendChild(tempInput);
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); // Mobile compatibility
+
+        try {
+          const successful = document.execCommand('copy');
+          if (successful) {
+            showToast('लिंक क्लिपबोर्डवर कॉपी झाली!');
+          } else {
+            showToast('लिंक कॉपी करता आली नाही');
+          }
+        } catch (err) {
+          showToast('लिंक: ' + urlToCopy);
+        } finally {
+          document.body.removeChild(tempInput);
+        }
+      }
+    })();
+  </script>
+</body>
+</html>
